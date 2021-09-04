@@ -36,6 +36,34 @@ app.post("/tasks", (req, res) => {
     });
 });
 
+// Reading Users
+app.get("/users", (req, res) => {
+  User.find({})
+    .then((users) => {
+      res.send(users);
+    })
+    .catch((e) => {
+      res.status(500).send();
+    });
+});
+
+// Reading Single users
+app.get("/users/:id", (req, res) => {
+  const _id = req.params.id;
+
+  User.findById(_id)
+    .then((user) => {
+      if (user) {
+        return res.send(user);
+      } else {
+        return res.status(404).send();
+      }
+    })
+    .catch((e) => {
+      res.status(404).send();
+    });
+});
+
 // Starting Server
 app.listen(port, () => {
   console.log(`Task Manager app listening at http://localhost:${port}`);
