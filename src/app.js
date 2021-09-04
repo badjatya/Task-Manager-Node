@@ -1,11 +1,25 @@
 const express = require("express");
 const port = process.env.PORT || 5000;
 
+// Importing Mongodb
+require("./db/mongoose");
+const User = require("./models/user");
+
 const app = express();
+
+// Configuration
+app.use(express.json());
 
 // Creating a user
 app.post("/users", (req, res) => {
-  console.log(req.body);
+  const user = new User(req.body);
+
+  user
+    .save()
+    .then(() => res.send(user))
+    .catch((error) => {
+      res.status(401).send(error);
+    });
 });
 
 // Starting Server
