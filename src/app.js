@@ -64,6 +64,22 @@ app.get("/users/:id", (req, res) => {
     });
 });
 
+// Reading All Tasks
+app.get("/tasks", (req, res) => {
+  Task.find({})
+    .then((tasks) => res.send(tasks))
+    .catch((e) => res.status(500).send());
+});
+
+// Reading Single Task
+app.get("/tasks/:id", (req, res) => {
+  const _id = req.params.id;
+
+  Task.findById(_id)
+    .then((user) => res.send(user))
+    .catch((e) => res.status(404).send());
+});
+
 // Starting Server
 app.listen(port, () => {
   console.log(`Task Manager app listening at http://localhost:${port}`);
