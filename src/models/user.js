@@ -44,7 +44,24 @@ const userSchema = mongoose.Schema({
       }
     },
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
+
+// Securing
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+  delete userObject.password;
+  delete userObject.tokens;
+  return userObject;
+};
 
 // auth tokens
 userSchema.methods.generateAuthToken = async function () {
@@ -52,6 +69,9 @@ userSchema.methods.generateAuthToken = async function () {
   const token = await jwt.sign({ _id: user._id.toString() }, "thisIsMe", {
     expiresIn: "7 day",
   });
+
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
 
   return token;
 };
