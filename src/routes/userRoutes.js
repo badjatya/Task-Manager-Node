@@ -40,30 +40,12 @@ userRouter.post("/users/login", async (req, res) => {
 });
 
 // Get users
-userRouter.get("/users", auth, async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.send(users);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// Get User
-userRouter.get("/users/:id", auth, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      res.status(404).send({ error: "User not found" });
-    }
-    res.send(user);
-  } catch (error) {
-    res.status(500).send(error);
-  }
+userRouter.get("/users/me", auth, async (req, res) => {
+  res.send(req.user);
 });
 
 // updating user
-userRouter.patch("/users/:id", async (req, res) => {
+userRouter.patch("/users/me", auth, async (req, res) => {
   // Validating updates
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "email", "password", "age"];
@@ -76,36 +58,23 @@ userRouter.patch("/users/:id", async (req, res) => {
   }
 
   try {
-    // const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-    //   new: true,
-    //   runValidators: true,
-    // });
+    updates.map((update) => (req.user[update] = req.body[update]));
+    await req.user.save();
 
-    const user = await User.findById(req.params.id);
-    updates.map((update) => (user[update] = req.body[update]));
-    await user.save();
-
-    if (!user) {
-      res.status(404).send({ error: "User not found" });
-    }
-
-    res.send(user);
+    res.send(req.user);
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
 // Delete User
-userRouter.delete("/users/:id", async (req, res) => {
+userRouter.delete("/users/me", auth, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-
-    if (!user) {
-      res.status(404).send({ error: "User not found" });
-    }
-
-    res.send(user);
-  } catch (error) {}
+    req.user.remove();
+    res.send(req.user);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 module.exports = userRouter;
