@@ -6,6 +6,7 @@ require("./db/mongoose");
 // config
 app.use(express.json());
 app.use(require("./routes/userRoutes"));
+app.use(require("./routes/taskRoutes"));
 
 app.listen(PORT, () => {
   console.log(`Listening at http://localhost:${PORT}`);
