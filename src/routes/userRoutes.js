@@ -3,6 +3,9 @@ const userRouter = require("express").Router();
 // Model
 const User = require("../models/user");
 
+// Middleware
+const auth = require("../middleware/auth");
+
 // Signup
 userRouter.post("/users", async (req, res) => {
   const user = new User(req.body);
@@ -37,7 +40,7 @@ userRouter.post("/users/login", async (req, res) => {
 });
 
 // Get users
-userRouter.get("/users", async (req, res) => {
+userRouter.get("/users", auth, async (req, res) => {
   try {
     const users = await User.find({});
     res.send(users);
@@ -47,7 +50,7 @@ userRouter.get("/users", async (req, res) => {
 });
 
 // Get User
-userRouter.get("/users/:id", async (req, res) => {
+userRouter.get("/users/:id", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
