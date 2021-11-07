@@ -19,7 +19,8 @@
   "homepage": "https://github.com/badjatya/Task-Manager-Node#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^6.0.12"
+    "mongoose": "^6.0.12",
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "prettier": "^2.4.1"
