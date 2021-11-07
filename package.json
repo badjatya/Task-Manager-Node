@@ -1,0 +1,27 @@
+{
+  "name": "task-node-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/badjatya/Task-Manager-Node.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/badjatya/Task-Manager-Node/issues"
+  },
+  "homepage": "https://github.com/badjatya/Task-Manager-Node#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12"
+  },
+  "devDependencies": {
+    "prettier": "^2.4.1"
+  }
+}
