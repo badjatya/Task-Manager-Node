@@ -43,6 +43,16 @@ router.get("/users/:id", async (req, res) => {
 
 // Update user
 router.patch("/users/:id", async (req, res) => {
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["name", "email", "password", "age"];
+  const isValidUpdate = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
+
+  if (!isValidUpdate) {
+    return res.status(401).send({ message: "not a valid update" });
+  }
+
   try {
     const user = await User.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
