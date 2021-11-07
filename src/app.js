@@ -8,6 +8,7 @@ app.use(express.json());
 
 // routes
 app.use(require("./routes/userRouter"));
+app.use(require("./routes/taskRouter"));
 
 app.listen(PORT, () => {
   console.log(`Listening at http://localhost:${PORT}`);
