@@ -5,6 +5,9 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+// Model
+const Task = require("./task");
+
 const userSchema = mongoose.Schema({
   name: {
     type: String,
@@ -105,6 +108,13 @@ userSchema.pre("save", async function (next) {
   if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 10);
   }
+  next();
+});
+
+userSchema.pre("remove", async function (next) {
+  const user = this;
+
+  await Task.deleteMany({ owner: user._id });
   next();
 });
 
