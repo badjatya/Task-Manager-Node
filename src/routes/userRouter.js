@@ -1,4 +1,8 @@
 const router = require("express").Router();
+const multer = require("multer");
+const upload = multer({
+  dest: "./src/avatars",
+});
 
 // Importing models
 const User = require("../models/user");
@@ -37,6 +41,11 @@ router.post("/users/login", async (req, res) => {
   } catch (error) {
     res.status(500).send(error);
   }
+});
+
+// Uploading avatar
+router.post("/users/me/avatar", upload.single("avatar"), (req, res) => {
+  res.send();
 });
 
 // Logout User
