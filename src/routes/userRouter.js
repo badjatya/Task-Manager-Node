@@ -5,6 +5,7 @@ const User = require("../models/user");
 
 // Middleware
 const auth = require("../middlewares/auth");
+const { response } = require("express");
 
 // ** Signup
 router.post("/users", async (req, res) => {
@@ -39,33 +40,12 @@ router.post("/users/login", async (req, res) => {
 });
 
 // get users
-router.get("/users", auth, async (req, res) => {
-  try {
-    const users = await User.find({});
-
-    res.send(users);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
-
-// get single user
-router.get("/users/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    res.send(user);
-  } catch (error) {
-    res.status(500).send(error);
-  }
+router.get("/users/me", auth, async (req, res) => {
+  res.send(req.user);
 });
 
 // Update user
-router.patch("/users/:id", async (req, res) => {
+router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "email", "password", "age"];
   const isValidUpdate = updates.every((update) =>
@@ -77,32 +57,22 @@ router.patch("/users/:id", async (req, res) => {
   }
 
   try {
-    const user = await User.findById(req.params.id);
     updates.map((update) => {
-      user[update] = req.body[update];
+      req.user[update] = req.body[update];
     });
-    await user.save();
+    await req.user.save();
 
-    if (!user) {
-      return res.status(404).send({ message: "User not found" });
-    }
-
-    res.send(user);
+    res.send(req.user);
   } catch (error) {
     res.status(500).send(error);
   }
 });
 
 // Delete user
-router.delete("/users/:id", async (req, res) => {
+router.delete("/users/:id", auth, async (req, res) => {
   try {
-    const user = await User.findByIdAndDelete(req.params.id);
-
-    if (!user) {
-      return res.status(404).send({ message: "user not found" });
-    }
-
-    res.send(user);
+    req.user.remove();
+    res.send(req.user);
   } catch (error) {
     res.status(500).send(error);
   }
