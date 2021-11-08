@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 // Lib
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const userSchema = mongoose.Schema({
   name: {
@@ -41,7 +42,29 @@ const userSchema = mongoose.Schema({
       }
     },
   },
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
+
+// Generating auth tokens
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+
+  const token = await jwt.sign({ _id: user._id.toString() }, "thisIsMeArchit", {
+    expiresIn: "1 day",
+  });
+
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+
+  return token;
+};
 
 // Login
 userSchema.statics.findByCredentials = async function (email, password) {
