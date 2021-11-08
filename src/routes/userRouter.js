@@ -3,7 +3,10 @@ const router = require("express").Router();
 // Importing models
 const User = require("../models/user");
 
-// Signup
+// Middleware
+const auth = require("../middlewares/auth");
+
+// ** Signup
 router.post("/users", async (req, res) => {
   const user = new User(req.body);
 
@@ -36,7 +39,7 @@ router.post("/users/login", async (req, res) => {
 });
 
 // get users
-router.get("/users", async (req, res) => {
+router.get("/users", auth, async (req, res) => {
   try {
     const users = await User.find({});
 
