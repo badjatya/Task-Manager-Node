@@ -54,9 +54,9 @@ const userSchema = mongoose.Schema({
 
 // Virtual for tasks
 userSchema.virtual("tasks", {
-  ref: "Task",
-  localField: "_id",
-  foreignField: "owner",
+  ref: "Task", // Reference of model
+  localField: "_id", // name of field to be a relationship
+  foreignField: "owner", // foreign filed of other model
 });
 
 // Hiding data
