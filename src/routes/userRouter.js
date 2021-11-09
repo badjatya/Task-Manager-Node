@@ -8,6 +8,9 @@ const User = require("../models/user");
 // Middleware
 const auth = require("../middlewares/auth");
 
+// Email
+const { welcomeEmail, removeEmail } = require("../emails/account");
+
 // ** Signup
 router.post("/users", async (req, res) => {
   const user = new User(req.body);
@@ -15,6 +18,7 @@ router.post("/users", async (req, res) => {
   try {
     await user.save();
     const token = await user.generateAuthToken();
+    welcomeEmail(user.name, user.email);
     res.status(201).send({ user, token });
   } catch (error) {
     res.status(500).send(error);
@@ -153,6 +157,7 @@ router.patch("/users/me", auth, async (req, res) => {
 router.delete("/users/:id", auth, async (req, res) => {
   try {
     req.user.remove();
+    removeEmail(req.user.name, req.user.email);
     res.send(req.user);
   } catch (error) {
     res.status(500).send(error);

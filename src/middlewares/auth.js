@@ -9,7 +9,7 @@ const auth = async (req, res, next) => {
     const token = req.header("Authorization").replace("Bearer ", "");
 
     // Verifying token
-    const decodedToken = jwt.verify(token, "thisIsMeArchit");
+    const decodedToken = jwt.verify(token, process.env.AUTH_JWT_SECRET_KEY);
 
     // Checking user
     const user = await User.findOne({
