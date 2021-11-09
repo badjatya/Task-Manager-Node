@@ -46,6 +46,9 @@ const userSchema = mongoose.Schema(
         }
       },
     },
+    avatar: {
+      type: Buffer,
+    },
     tokens: [
       {
         token: {

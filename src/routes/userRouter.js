@@ -42,7 +42,6 @@ router.post("/users/login", async (req, res) => {
 
 // Uploading avatar
 const upload = multer({
-  dest: "./src/avatars",
   limits: 1000000,
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
@@ -54,8 +53,11 @@ const upload = multer({
 });
 router.post(
   "/users/me/avatar",
+  auth,
   upload.single("avatar"),
-  (req, res) => {
+  async (req, res) => {
+    req.user.avatar = req.file.buffer;
+    await req.user.save();
     res.send();
   },
   (error, req, res, next) => {
