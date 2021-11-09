@@ -13,7 +13,7 @@ const welcomeEmail = (name, email) => {
 const removeEmail = (name, email) => {
   sgMail.send({
     to: email, // Change to your recipient
-    from: "architj240@gmail.com", // Change to your verified sender
+    from: process.env.EMAIL_ID, // Change to your verified sender
     subject: `Thanks ${name} from task-manager-application`,
     text: `Come back soon ${name}. `,
   });
