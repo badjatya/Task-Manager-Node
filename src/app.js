@@ -13,7 +13,7 @@ const upload = multer({
   limits: 1000000,
   fileFilter(req, file, cb) {
     if (!file.originalname.match(/\.(doc|docx)$/)) {
-      cb(new Error("Please upload a word document"));
+      return cb(new Error("Please upload a word document"));
     }
 
     cb(undefined, true);

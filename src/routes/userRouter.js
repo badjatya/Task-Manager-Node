@@ -1,8 +1,5 @@
 const router = require("express").Router();
 const multer = require("multer");
-const upload = multer({
-  dest: "./src/avatars",
-});
 
 // Importing models
 const User = require("../models/user");
@@ -44,6 +41,17 @@ router.post("/users/login", async (req, res) => {
 });
 
 // Uploading avatar
+const upload = multer({
+  dest: "./src/avatars",
+  limits: 1000000,
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+      return cb(new Error("Please upload a image"));
+    }
+
+    cb(undefined, true);
+  },
+});
 router.post("/users/me/avatar", upload.single("avatar"), (req, res) => {
   res.send();
 });
